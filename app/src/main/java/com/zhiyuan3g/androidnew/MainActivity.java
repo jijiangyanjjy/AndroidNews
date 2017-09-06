@@ -40,9 +40,11 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < TabTitleDate.TAB_TITLE.length; i++) {
             TabTitleDate.add(new TopFragment());
         }
-
+        //创建适配器
         TabPageIndicatorAdapter adapter = new TabPageIndicatorAdapter(fragmentManager);
+        //给ViewPager设置适配器
         mainViewPager.setAdapter(adapter);
+        //关联tabPager和ViewPager
         mainTabPageIndicator.setViewPager(mainViewPager);
     }
 

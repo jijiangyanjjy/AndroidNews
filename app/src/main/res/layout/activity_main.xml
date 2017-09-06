@@ -56,11 +56,12 @@
             android:id="@+id/main_tabPageIndicator"
             android:layout_weight="9"
             android:layout_width="0dp"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
         </com.viewpagerindicator.TabPageIndicator>
 
         <ImageView
+            android:layout_gravity="center"
             android:id="@+id/main_add"
             android:padding="3dp"
             android:src="@drawable/add"
