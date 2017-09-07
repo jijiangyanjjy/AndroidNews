@@ -24,11 +24,11 @@ public class TabPageIndicatorAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        return TabTitleDate.TAB_TITLE.length;
+        return TabTitleDate.title.size();
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return TabTitleDate.TAB_TITLE[position];
+        return TabTitleDate.title.get(position);
     }
 }
