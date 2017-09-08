@@ -59,7 +59,13 @@ public class MainActivity extends AppCompatActivity {
             List<TitleDB> all = DataSupport.where("isOk = ?","0").find(TitleDB.class);
             for(TitleDB titleDB : all){
                 TabTitleDate.addDate(titleDB.getTitle());
-                TabTitleDate.addDate(new TopFragment());
+                //定义bundle
+                Bundle bundle = new Bundle();
+                //每次添加碎片时，传递新的
+                bundle.putString("title",titleDB.getTitle());
+                TopFragment topFragment = new TopFragment();
+                topFragment.setArguments(bundle);
+                TabTitleDate.addDate(topFragment);
             }
         }else{
             //显示全部的头和内容
@@ -76,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
         }
         //创建适配器
         adapter = new TabPageIndicatorAdapter(fragmentManager);
+        adapter.notifyDataSetChanged();
         //给ViewPager设置适配器
         mainViewPager.setAdapter(adapter);
         //关联tabPager和ViewPager
@@ -100,8 +107,8 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode){
             case 0:
-                mainTabPageIndicator.notifyDataSetChanged();
                 adapter.notifyDataSetChanged();
+                mainTabPageIndicator.notifyDataSetChanged();
                 break;
         }
     }

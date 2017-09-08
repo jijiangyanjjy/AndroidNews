@@ -6,15 +6,18 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.zhiyuan3g.androidnew.adapter.AddAdapter;
 import com.zhiyuan3g.androidnew.adapter.JainAdapter;
 import com.zhiyuan3g.androidnew.db.TitleDB;
+import com.zhiyuan3g.androidnew.fragment.TopFragment;
 import com.zhiyuan3g.androidnew.util.TabTitleDate;
 
 import org.litepal.crud.DataSupport;
@@ -36,6 +39,7 @@ public class AddActivity extends AppCompatActivity {
     private AddAdapter adapters;
     private JainAdapter jainAdapter;
     private List<TitleDB> alls;
+    private List<TitleDB> all;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,16 +55,43 @@ public class AddActivity extends AppCompatActivity {
     }
 
     private void initSencedRecyclerView() {
-        // isOk =1;
         alls = DataSupport.where("isOk = ?", "1").find(TitleDB.class);
         jainAdapter = new JainAdapter(R.layout.first_item, alls);
         GridLayoutManager manager = new GridLayoutManager(this, 4);
         addMyRecyclerViewJian.setLayoutManager(manager);
         addMyRecyclerViewJian.setAdapter(jainAdapter);
+
+        jainAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                ContentValues cv = new ContentValues();
+                cv.put("isOk", 0);
+                DataSupport.updateAll("TitleDB", cv, "title = ?", alls.get(position).getTitle());
+
+                //刷新上面的列表
+                updateSecond(alls.get(position));
+                TabTitleDate.addDate(alls.get(position).getTitle());
+                Bundle bundle = new Bundle();
+                //每次添加碎片时，传递新的
+                bundle.putString("title",alls.get(position).getTitle());
+                TopFragment topFragment = new TopFragment();
+                topFragment.setArguments(bundle);
+                TabTitleDate.addDate(topFragment);
+                //移除列表中的集合
+                alls.remove(alls.get(position));
+                jainAdapter.notifyDataSetChanged();
+            }
+        });
+    }
+
+    private void updateSecond(TitleDB titleDB) {
+        all.add(titleDB);
+        adapters.notifyDataSetChanged();
     }
 
     private void initFirstRecyclerView() {
-        final List<TitleDB> all = DataSupport.where("isOk = ?", "0").find(TitleDB.class);
+        //所有当前title中包含的
+        all = DataSupport.where("isOk = ?", "0").find(TitleDB.class);
         adapters = new AddAdapter(R.layout.first_item, all);
         GridLayoutManager manager = new GridLayoutManager(this, 4);
         addMyRecyclerView.setLayoutManager(manager);
@@ -69,17 +100,21 @@ public class AddActivity extends AppCompatActivity {
         adapters.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                ContentValues cv = new ContentValues();
-                cv.put("isOk", 1);
-                DataSupport.updateAll("TitleDB", cv, "title = ?", TabTitleDate.title.get(position));
-                //在移除TitleDB对象之前 先添加进下面列表
-                initUpdate(all.get(position));
-                //移除列表中的集合
-                all.remove(all.get(position));
-                //移除全局的集合
-                TabTitleDate.removeDate(TabTitleDate.title.get(position));
-                TabTitleDate.removeDate(TabTitleDate.list.get(position));
-                adapters.notifyDataSetChanged();
+                if(all.size()>4){
+                    ContentValues cv = new ContentValues();
+                    cv.put("isOk", 1);
+                    DataSupport.updateAll("TitleDB", cv, "title = ?", all.get(position).getTitle());
+                    //在移除TitleDB对象之前 先添加进下面列表
+                    initUpdate(all.get(position));
+                    //移除全局的集合
+                    TabTitleDate.removeDate(all.get(position).getTitle());
+                    TabTitleDate.removeDate(TabTitleDate.list.get(position));
+                    //移除列表中的集合
+                    all.remove(all.get(position));
+                    adapters.notifyDataSetChanged();
+                }else{
+                    Toast.makeText(AddActivity.this, "最少保留一个标题", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
