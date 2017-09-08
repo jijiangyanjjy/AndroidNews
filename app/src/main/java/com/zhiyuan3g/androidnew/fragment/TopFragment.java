@@ -3,17 +3,27 @@ package com.zhiyuan3g.androidnew.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import com.google.gson.Gson;
 import com.zhiyuan3g.androidnew.R;
+import com.zhiyuan3g.androidnew.adapter.NewsAdapter;
+import com.zhiyuan3g.androidnew.adapter.NewsAdapterTest;
+import com.zhiyuan3g.androidnew.base.MyApp;
+import com.zhiyuan3g.androidnew.entity.ADF;
 import com.zhiyuan3g.androidnew.entity.NewsEntity;
 import com.zhiyuan3g.androidnew.util.OkHttpUrlUtil;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
+
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -24,6 +34,9 @@ import okhttp3.Call;
  */
 
 public class TopFragment extends Fragment {
+
+    @BindView(R.id.top_recyclerView)
+    RecyclerView topRecyclerView;
 
     @Nullable
     @Override
@@ -77,6 +90,29 @@ public class TopFragment extends Fragment {
                     public void onResponse(String response, int id) {
                         Gson gson = new Gson();
                         NewsEntity newsEntity = gson.fromJson(response, NewsEntity.class);
+                        List<NewsEntity.ResultBean.DataBean> data = newsEntity.getResult().getData();
+                        for(NewsEntity.ResultBean.DataBean dataBean : data){
+                            if(dataBean.getThumbnail_pic_s03()!=null){
+                                dataBean.setItemType(3);
+                            }else if(dataBean.getThumbnail_pic_s02() !=null &&dataBean.getThumbnail_pic_s03()==null){
+                                dataBean.setItemType(2);
+                            }else{
+                                dataBean.setItemType(1);
+                            }
+                        }
+
+                        NewsAdapter adapter = new NewsAdapter(newsEntity.getResult().getData());
+                        LinearLayoutManager manager = new LinearLayoutManager(MyApp.getContext());
+                        topRecyclerView.setLayoutManager(manager);
+                        topRecyclerView.setAdapter(adapter);
+
+
+
+//                        NewsAdapterTest adapter = new NewsAdapterTest(R.layout.fragment_one,newsEntity.getResult().getData());
+//                        NewsAdapter adapter = new NewsAdapter(newsEntity.getResult().getData());
+//                        LinearLayoutManager manager = new LinearLayoutManager(MyApp.getContext());
+//                        topRecyclerView.setLayoutManager(manager);
+//                        topRecyclerView.setAdapter(adapter);
                     }
                 });
     }

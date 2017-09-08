@@ -71,7 +71,12 @@ public class MainActivity extends AppCompatActivity {
             //显示全部的头和内容
             for (int i = 0; i < TabTitleDate.TAB_TITLE.length; i++) {
                 TabTitleDate.addDate(TabTitleDate.TAB_TITLE[i]);
-                TabTitleDate.addDate(new TopFragment());
+                Bundle bundle = new Bundle();
+                //每次添加碎片时，传递新的
+                bundle.putString("title",TabTitleDate.TAB_TITLE[i]);
+                TopFragment topFragment = new TopFragment();
+                topFragment.setArguments(bundle);
+                TabTitleDate.addDate(topFragment);
                 TitleDB titleDB = new TitleDB();
                 titleDB.setTitle(TabTitleDate.TAB_TITLE[i]);
                 titleDB.setIsOk(0);

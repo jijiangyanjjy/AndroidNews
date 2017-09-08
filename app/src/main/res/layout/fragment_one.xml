@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="12dp"
+    android:paddingRight="12dp"
+    android:paddingTop="7dp"
+    android:paddingBottom="7dp">
+
+    <TextView
+        android:layout_marginRight="10dp"
+        android:textColor="#000000"
+        android:maxLines="2"
+        android:layout_alignParentLeft="true"
+        android:text="asdasd阿斯打扫asdasdasdasdasdasd"
+        android:layout_toLeftOf="@+id/one_img_one"
+        android:textSize="16sp"
+        android:id="@+id/one_tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:layout_alignTop="@+id/one_tv_title"
+        android:layout_alignBottom="@+id/one_tv_time"
+        android:id="@+id/one_img_one"
+        android:layout_alignParentRight="true"
+        android:src="@mipmap/ic_launcher"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/one_tv_auther"
+        android:text="asdasd"
+        android:layout_marginTop="7dp"
+        android:layout_below="@+id/one_tv_title"
+        android:layout_alignParentLeft="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_marginTop="3dp"
+        android:layout_below="@+id/one_tv_auther"
+        android:text="2017-08-05"
+        android:id="@+id/one_tv_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+
+</RelativeLayout>

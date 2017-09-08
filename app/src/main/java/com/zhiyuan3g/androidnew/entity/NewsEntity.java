@@ -1,5 +1,7 @@
 package com.zhiyuan3g.androidnew.entity;
 
+import com.chad.library.adapter.base.entity.MultiItemEntity;
+
 import java.util.List;
 
 /**
@@ -67,7 +69,21 @@ public class NewsEntity {
             this.data = data;
         }
 
-        public static class DataBean {
+        public static class DataBean implements MultiItemEntity{
+            public static final int ONE = 1;
+            public static final int TWO = 2;
+            public static final int THREE = 3;
+            private int itemType;
+
+            public void setItemType(int itemType) {
+                this.itemType = itemType;
+            }
+
+            @Override
+            public int getItemType() {
+                return itemType;
+            }
+
             /**
              * uniquekey : 62956f3660da71eb4d3aaf89e09ee871
              * title : 特朗普会晤科威特领导人 主动搀扶显绅士风度
