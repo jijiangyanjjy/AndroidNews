@@ -7,7 +7,6 @@ import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.zhiyuan3g.androidnew.R;
 import com.zhiyuan3g.androidnew.base.MyApp;
-import com.zhiyuan3g.androidnew.entity.ADF;
 import com.zhiyuan3g.androidnew.entity.NewsEntity;
 
 import java.util.List;
