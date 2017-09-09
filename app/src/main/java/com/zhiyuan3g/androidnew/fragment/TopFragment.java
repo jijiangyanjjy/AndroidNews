@@ -1,5 +1,6 @@
 package com.zhiyuan3g.androidnew.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -8,8 +9,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.Gson;
+import com.zhiyuan3g.androidnew.DetialActivity;
 import com.zhiyuan3g.androidnew.R;
 import com.zhiyuan3g.androidnew.adapter.NewsAdapter;
 import com.zhiyuan3g.androidnew.adapter.NewsAdapterTest;
@@ -90,7 +94,7 @@ public class TopFragment extends Fragment {
                     public void onResponse(String response, int id) {
                         Gson gson = new Gson();
                         NewsEntity newsEntity = gson.fromJson(response, NewsEntity.class);
-                        List<NewsEntity.ResultBean.DataBean> data = newsEntity.getResult().getData();
+                        final List<NewsEntity.ResultBean.DataBean> data = newsEntity.getResult().getData();
                         for(NewsEntity.ResultBean.DataBean dataBean : data){
                             if(dataBean.getThumbnail_pic_s03()!=null){
                                 dataBean.setItemType(3);
@@ -101,18 +105,19 @@ public class TopFragment extends Fragment {
                             }
                         }
 
-                        NewsAdapter adapter = new NewsAdapter(newsEntity.getResult().getData());
+                        NewsAdapter adapter = new NewsAdapter(data);
                         LinearLayoutManager manager = new LinearLayoutManager(MyApp.getContext());
                         topRecyclerView.setLayoutManager(manager);
                         topRecyclerView.setAdapter(adapter);
 
-
-
-//                        NewsAdapterTest adapter = new NewsAdapterTest(R.layout.fragment_one,newsEntity.getResult().getData());
-//                        NewsAdapter adapter = new NewsAdapter(newsEntity.getResult().getData());
-//                        LinearLayoutManager manager = new LinearLayoutManager(MyApp.getContext());
-//                        topRecyclerView.setLayoutManager(manager);
-//                        topRecyclerView.setAdapter(adapter);
+                        adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                                Intent intent = new Intent(MyApp.getContext(), DetialActivity.class);
+                                intent.putExtra("url",data.get(position).getUrl());
+                                startActivity(intent);
+                            }
+                        });
                     }
                 });
     }
